@@ -299,7 +299,6 @@ export class WebLarekAPI extends Api implements IWebLarekAPI {
     }
 
     createProduct = (data: Omit<IProduct, '_id'>) => {
-        console.log(data)
         return this.requestWithRefresh<IProduct>('/product', {
             method: 'POST',
             body: JSON.stringify(data),
