@@ -28,7 +28,7 @@ export const csrfProtection = (
     _res: Response,
     next: NextFunction
 ) => {
-    if (CSRF_APPLIED_METHODS.includes(req.method)) {
+    if (!CSRF_APPLIED_METHODS.includes(req.method)) {
         return next()
     }
 
