@@ -8,7 +8,7 @@ import path from 'path'
 import { DB_ADDRESS, ORIGIN_ALLOW } from './config'
 import errorHandler from './middlewares/error-handler'
 import serveStatic from './middlewares/serverStatic'
-import { csrfProtection } from 'middlewares/csrf-protector'
+import { csrfProtection } from './middlewares/csrf-protector'
 import routes from './routes'
 
 const { PORT = 3000 } = process.env
