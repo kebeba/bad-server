@@ -34,9 +34,7 @@ export const csrfProtection = (
 
     const cookieToken = req.cookies?.[CSRF_COOKIE]
     const requestToken =
-        req.get(CSRF_HEADER) ||
-        req.get('csrf-token') ||
-        req.get('x-xsrf-token')
+        req.get(CSRF_HEADER) || req.get('csrf-token') || req.get('x-xsrf-token')
 
     if (!cookieToken || !requestToken || cookieToken !== requestToken) {
         return next(new ForbiddenError('Невалидный CSRF-токен'))

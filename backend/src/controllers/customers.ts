@@ -3,7 +3,10 @@ import { FilterQuery } from 'mongoose'
 import NotFoundError from '../errors/not-found-error'
 import Order from '../models/order'
 import User, { IUser } from '../models/user'
-import { normalizeLimitValue, normalizePageValue} from '../utils/normalizeUserInput'
+import {
+    normalizeLimitValue,
+    normalizePageValue,
+} from '../utils/normalizeUserInput'
 import escapeRegular from '../utils/escapeRegExp'
 
 // TODO: Добавить guard admin
@@ -113,8 +116,18 @@ export const getCustomers = async (
         }
 
         const sort: { [key: string]: any } = {}
-        const validSortingFields = ['createdAt', 'lastOrderDate', 'name', 'orderCount', 'totalAmount']
-        if (sortField && sortOrder && validSortingFields.includes(sortField as string)) {
+        const validSortingFields = [
+            'createdAt',
+            'lastOrderDate',
+            'name',
+            'orderCount',
+            'totalAmount',
+        ]
+        if (
+            sortField &&
+            sortOrder &&
+            validSortingFields.includes(sortField as string)
+        ) {
             sort[sortField as string] = sortOrder === 'desc' ? -1 : 1
         }
 
@@ -187,7 +200,7 @@ export const updateCustomer = async (
         const updatedUser = await User.findByIdAndUpdate(
             req.params.id,
             { name, phone },
-            { new: true, runValidators: true },
+            { new: true, runValidators: true }
         )
             .orFail(
                 () =>

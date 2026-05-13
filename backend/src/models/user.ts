@@ -106,7 +106,13 @@ const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>(
         toJSON: {
             virtuals: true,
             transform: (_doc, ret) => {
-                const { tokens: _tokens, password: _password, _id, roles: _roles, ...rest } = ret
+                const {
+                    tokens: _tokens,
+                    password: _password,
+                    _id,
+                    roles: _roles,
+                    ...rest
+                } = ret
                 return rest
             },
         },
@@ -181,9 +187,14 @@ userSchema.statics.findUserByCredentials = async function findByCredentials(
         .orFail(() => new UnauthorizedError('Неправильные почта или пароль'))
     const passwdMatch = await bcrypt.compare(password, user.password)
     if (!passwdMatch) {
-        const legacyHash = crypto.createHash('md5').update(password).digest('hex')
+        const legacyHash = crypto
+            .createHash('md5')
+            .update(password)
+            .digest('hex')
         if (user.password !== legacyHash) {
-            return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'))
+            return Promise.reject(
+                new UnauthorizedError('Неправильные почта или пароль')
+            )
         }
         user.password = password
         await user.save()

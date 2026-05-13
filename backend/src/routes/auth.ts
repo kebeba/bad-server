@@ -10,7 +10,10 @@ import {
     updateCurrentUser,
 } from '../controllers/auth'
 import auth from '../middlewares/auth'
-import { validateAuthentication, validateUserBody } from '../middlewares/validations'
+import {
+    validateAuthentication,
+    validateUserBody,
+} from '../middlewares/validations'
 
 const authRouter = Router()
 

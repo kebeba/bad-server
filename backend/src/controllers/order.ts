@@ -1,12 +1,15 @@
 import { NextFunction, Request, Response } from 'express'
 import { FilterQuery, Error as MongooseError, Types } from 'mongoose'
+import sanitizeHtml from 'sanitize-html'
 import BadRequestError from '../errors/bad-request-error'
 import NotFoundError from '../errors/not-found-error'
 import Order, { IOrder, StatusType } from '../models/order'
 import Product, { IProduct } from '../models/product'
 import User from '../models/user'
-import { normalizeLimitValue, normalizePageValue} from '../utils/normalizeUserInput'
-import sanitizeHtml from 'sanitize-html'
+import {
+    normalizeLimitValue,
+    normalizePageValue,
+} from '../utils/normalizeUserInput'
 import escapeRegular from '../utils/escapeRegExp'
 
 // eslint-disable-next-line max-len
@@ -36,7 +39,10 @@ export const getOrders = async (
         const normalPage = normalizePageValue(page, 1)
 
         if (status) {
-            if (typeof status !== 'string' || !Object.values(StatusType).includes(status as StatusType)) {
+            if (
+                typeof status !== 'string' ||
+                !Object.values(StatusType).includes(status as StatusType)
+            ) {
                 throw new BadRequestError('Получен некорректный статус заказа')
             }
             filters.status = status
@@ -112,8 +118,17 @@ export const getOrders = async (
         }
 
         const sort: { [key: string]: any } = {}
-        const validSortingFields = ['createdAt', 'orderNumber', 'status', 'totalAmount']
-        if (sortField && sortOrder && validSortingFields.includes(sortField as string)) {
+        const validSortingFields = [
+            'createdAt',
+            'orderNumber',
+            'status',
+            'totalAmount',
+        ]
+        if (
+            sortField &&
+            sortOrder &&
+            validSortingFields.includes(sortField as string)
+        ) {
             sort[sortField as string] = sortOrder === 'desc' ? -1 : 1
         }
 
@@ -298,13 +313,13 @@ export const createOrder = async (
         const userId = res.locals.user._id
         const { address, payment, phone, total, email, items, comment } =
             req.body
-        
+
         const escapedComment = comment
-        ? sanitizeHtml(comment, {
-            allowedTags: ['b', 'br', 'em', 'i', 'p', 'strong'],
-            allowedAttributes: {},
-        })
-        : ''
+            ? sanitizeHtml(comment, {
+                  allowedTags: ['b', 'br', 'em', 'i', 'p', 'strong'],
+                  allowedAttributes: {},
+              })
+            : ''
 
         items.forEach((id: Types.ObjectId) => {
             const product = products.find((p) => p._id.equals(id))

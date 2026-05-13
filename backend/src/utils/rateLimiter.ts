@@ -6,8 +6,8 @@ export const apiRequestsLimiter = rateLimit({
     standardHeaders: true,
     legacyHeaders: false,
     message: {
-        error: 'Превышено максимальное число запросов. Пожалуйста, попробуйте позже.'
-    }
+        error: 'Превышено максимальное число запросов. Пожалуйста, попробуйте позже.',
+    },
 })
 
 export const authLimiter = rateLimit({
@@ -17,6 +17,6 @@ export const authLimiter = rateLimit({
     standardHeaders: true,
     legacyHeaders: false,
     message: {
-        error: 'Превышено максимальное число попыток входа. Пожалуйста, попробуйте через 15 минут.'
-    }
+        error: 'Превышено максимальное число попыток входа. Пожалуйста, попробуйте через 15 минут.',
+    },
 })

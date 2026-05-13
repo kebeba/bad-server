@@ -193,9 +193,9 @@ const updateCurrentUser = async (
     const { name, phone } = req.body
     try {
         const updatedUser = await User.findByIdAndUpdate(
-            userId, 
-            { name, phone }, 
-            { new: true, runValidators: true },
+            userId,
+            { name, phone },
+            { new: true, runValidators: true }
         ).orFail(
             () =>
                 new NotFoundError(

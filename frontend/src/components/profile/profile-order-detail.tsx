@@ -73,7 +73,9 @@ export default function ProfileOrderDetail() {
                         {dataInfo.comment ? (
                             <div
                                 dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(dataInfo.comment),
+                                    __html: DOMPurify.sanitize(
+                                        dataInfo.comment
+                                    ),
                                 }}
                             />
                         ) : (

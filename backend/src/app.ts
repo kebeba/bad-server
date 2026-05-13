@@ -22,7 +22,7 @@ app.use('/order', apiRequestsLimiter)
 app.use('/upload', apiRequestsLimiter)
 app.use('/customers', apiRequestsLimiter)
 
-app.use(cors({ origin: ORIGIN_ALLOW, credentials: true }));
+app.use(cors({ origin: ORIGIN_ALLOW, credentials: true }))
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(serveStatic(path.join(__dirname, 'public')))

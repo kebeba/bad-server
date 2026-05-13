@@ -1,4 +1,4 @@
-import { API_URL, CDN_URL } from '@constants' 
+import { API_URL, CDN_URL } from '@constants'
 
 import {
     ICustomerPaginationResult,
@@ -31,13 +31,13 @@ export type ApiListResponse<Type> = {
 }
 
 type CsrfTokenResponse = {
-    csrfToken: string;
+    csrfToken: string
 }
 
 class Api {
     private readonly baseUrl: string
     protected options: RequestInit
-    private csrfToken: string | null = null;
+    private csrfToken: string | null = null
 
     constructor(baseUrl: string, options: RequestInit = {}) {
         this.baseUrl = baseUrl
@@ -61,8 +61,15 @@ class Api {
     protected async request<T>(endpoint: string, options: RequestInit) {
         try {
             const reqMethod = options.method?.toUpperCase() || 'GET'
-            const isCsrfTokenNeed = ['DELETE', 'POST', 'PUT', 'UPDATE'].includes(reqMethod)
-            const csrfToken = isCsrfTokenNeed ? await this.acquireCsrfToken() : null
+            const isCsrfTokenNeed = [
+                'DELETE',
+                'POST',
+                'PUT',
+                'UPDATE',
+            ].includes(reqMethod)
+            const csrfToken = isCsrfTokenNeed
+                ? await this.acquireCsrfToken()
+                : null
             const res = await fetch(`${this.baseUrl}${endpoint}`, {
                 ...this.options,
                 ...options,

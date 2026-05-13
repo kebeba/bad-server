@@ -1,6 +1,6 @@
 export const normalizeLimitValue = (value: unknown, backupVal: number) => {
     const valueNumeric = Number(value)
-    
+
     if (valueNumeric < 1 || !Number.isFinite(valueNumeric)) {
         return backupVal
     }
@@ -10,7 +10,7 @@ export const normalizeLimitValue = (value: unknown, backupVal: number) => {
 
 export const normalizePageValue = (value: unknown, backupVal: number) => {
     const valueNumeric = Number(value)
-    
+
     if (valueNumeric < 1 || !Number.isFinite(valueNumeric)) {
         return backupVal
     }
