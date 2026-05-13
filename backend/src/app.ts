@@ -16,8 +16,11 @@ const { PORT = 3000 } = process.env
 const app = express()
 
 app.use(cookieParser())
-app.use(apiRequestsLimiter)
 app.use('/auth/login', authLimiter)
+app.use('/product', apiRequestsLimiter)
+app.use('/order', apiRequestsLimiter)
+app.use('/upload', apiRequestsLimiter)
+app.use('/customers', apiRequestsLimiter)
 
 app.use(cors({ origin: ORIGIN_ALLOW, credentials: true }));
 // app.use(express.static(path.join(__dirname, 'public')));
