@@ -10,9 +10,13 @@ import errorHandler from './middlewares/error-handler'
 import serveStatic from './middlewares/serverStatic'
 import { csrfProtection } from './middlewares/csrf-protector'
 import routes from './routes'
+import { apiRequestsLimiter, authLimiter } from './utils/rateLimiter'
 
 const { PORT = 3000 } = process.env
 const app = express()
+
+app.use(apiRequestsLimiter)
+app.use('/auth/login', authLimiter)
 
 app.use(cookieParser())
 app.use(cors({ origin: ORIGIN_ALLOW, credentials: true }));
