@@ -30,9 +30,14 @@ export type ApiListResponse<Type> = {
     items: Type[]
 }
 
+type CsrfTokenResponse = {
+    csrfToken: string
+}
+
 class Api {
     private readonly baseUrl: string
     protected options: RequestInit
+    private csrfToken: string | null = null
 
     constructor(baseUrl: string, options: RequestInit = {}) {
         this.baseUrl = baseUrl
@@ -55,9 +60,25 @@ class Api {
 
     protected async request<T>(endpoint: string, options: RequestInit) {
         try {
+            const reqMethod = options.method?.toUpperCase() || 'GET'
+            const isCsrfTokenNeed = [
+                'DELETE',
+                'POST',
+                'PUT',
+                'UPDATE',
+            ].includes(reqMethod)
+            const csrfToken = isCsrfTokenNeed
+                ? await this.acquireCsrfToken()
+                : null
             const res = await fetch(`${this.baseUrl}${endpoint}`, {
                 ...this.options,
                 ...options,
+                credentials: isCsrfTokenNeed ? 'include' : options.credentials,
+                headers: {
+                    ...this.options.headers,
+                    ...options.headers,
+                    ...(csrfToken ? { 'X-CSRF-Token': csrfToken } : {}),
+                },
             })
             return await this.handleResponse<T>(res)
         } catch (error) {
@@ -92,6 +113,21 @@ class Api {
                 },
             })
         }
+    }
+
+    private async acquireCsrfToken() {
+        if (this.csrfToken) {
+            return this.csrfToken
+        }
+
+        const rsp = await fetch(`${this.baseUrl}/auth/csrf-token`, {
+            method: 'GET',
+            credentials: 'include',
+        })
+
+        const data = await this.handleResponse<CsrfTokenResponse>(rsp)
+        this.csrfToken = data.csrfToken
+        return this.csrfToken
     }
 }
 
@@ -299,7 +335,6 @@ export class WebLarekAPI extends Api implements IWebLarekAPI {
     }
 
     createProduct = (data: Omit<IProduct, '_id'>) => {
-        console.log(data)
         return this.requestWithRefresh<IProduct>('/product', {
             method: 'POST',
             body: JSON.stringify(data),

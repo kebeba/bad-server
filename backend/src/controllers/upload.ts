@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { constants } from 'http2'
+import sharp from 'sharp'
+import { unlink } from 'fs/promises'
 import BadRequestError from '../errors/bad-request-error'
 
 export const uploadFile = async (
@@ -11,6 +13,24 @@ export const uploadFile = async (
         return next(new BadRequestError('Файл не загружен'))
     }
     try {
+        if (req.file.size <= 2 * 1024) {
+            await unlink(req.file.path)
+            return next(
+                new BadRequestError(
+                    'Загружаемый файл меньше минимально допустимого размера в 2кБ'
+                )
+            )
+        }
+
+        try {
+            await sharp(req.file.path).metadata()
+        } catch (_error) {
+            await unlink(req.file.path)
+            return next(
+                new BadRequestError('Загружаемый файл некорректного формата')
+            )
+        }
+
         const fileName = process.env.UPLOAD_PATH
             ? `/${process.env.UPLOAD_PATH}/${req.file.filename}`
             : `/${req.file?.filename}`
